@@ -1,0 +1,12 @@
+name: HandyOrbs
+author: qKing12
+version: 1.1
+main: me.qKing12.HandyOrbs.Main
+description: Orbs that come in handy.
+api-version: 1.13
+softdepend: [Multiverse-Core, MultiWorld]
+
+commands:
+  handyorbs:
+    aliases: [ho, handyo, horbs, horb, handyorb]
+    description: Main command for HandyOrbs

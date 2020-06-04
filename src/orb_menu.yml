@@ -1,0 +1,108 @@
+menu-title: '&8Orb Menu'
+#Must be a multiple of 9
+menu-size: 36
+
+use-background-item: true
+background-item: '160:15'
+background-item-name: ' '
+background-item-lore: []
+
+edit-orb-title-item: '386'
+#Slot number starts from 0
+edit-orb-title-slot: 10
+#If the player doesn't have the permission below
+#the item won't be displayed
+#Set it to 'none' to disable permission check
+edit-orb-title-permission: 'handyorbs.orb.edit.title'
+edit-orb-title-name: '&aEdit Orb Title'
+edit-orb-title-lore:
+  - '&fChange orb''s name'
+  - '&fto something else.'
+
+reset-orb-title-item: '331'
+#Slot number starts from 0
+reset-orb-title-slot: 12
+#If the player doesn't have the permission below
+#the item won't be displayed
+#Set it to 'none' to disable permission check
+reset-orb-title-permission: 'handyorbs.orb.edit.title'
+reset-orb-title-name: '&aReset Orb Title'
+reset-orb-title-lore:
+  - '&fReset orb''s name'
+  - '&fto the default settings.'
+
+toggle-title-visibility:
+  permission: 'handyorbs.orb.edit.title'
+  slot: 14
+  title-hidden-item:
+    item: '351:8'
+    name: '&fStatus: &7HIDDEN'
+    lore:
+      - '&fThe orb''s title is'
+      - '&fcurrently hidden.'
+      - ''
+      - '&eClick to show the title!'
+  title-shown-item:
+    item: '351:10'
+    name: '&fStatus: &aSHOWN'
+    lore:
+      - '&fThe orb''s title is'
+      - '&fcurrently shown.'
+      - ''
+      - '&eClick to hide the title!'
+
+pickup-orb-item: '54'
+pickup-orb-slot: 16
+pickup-orb-name: '&aPick Up Orb'
+pickup-orb-lore:
+  - '&fClick to pick up'
+  - '&fthe orb.'
+
+make-server-orb-item: '137'
+make-server-orb-slot: 20
+make-server-orb-permission: 'handyorbs.admin'
+make-server-orb-name: '&cMake Server Orb'
+make-server-orb-lore:
+  - '&fTransform this orb'
+  - '&finto a server orb.'
+  - ''
+  - '&fThe current owner will'
+  - '&fbe replaced with the server.'
+
+#Not all orbs have hyper activity but if they do
+#this setting will make the orb hyperactive for 1 second
+#Example: A hyperactive farming orb will plant crops
+#on every soil in its radius in within a second
+hyper-activity-item: '399'
+hyper-activity-slot: 24
+hyper-activity-permission: 'handyorbs.hyperactivity'
+#cooldown in seconds
+hyper-activity-cooldown: 600
+hyper-activity-cooldown-bypass-permission: 'handyorbs.hyperactivity.bypass'
+hyper-activity-cooldown-message: '&fThis orb is regaining power from the last &6hyper activity&f!'
+no-hyper-activity-message: '&cThis orb doesn''t have hyper activity!'
+hyper-activity-name: '&6Hyper Active'
+hyper-activity-lore:
+  - '&fMake the orb hyperactive'
+  - '&ffor a second.'
+  - ''
+  - '&fAll activity will be maxed out!'
+  - ''
+  - '&fCooldown: &e10 minutes'
+
+close-menu-item: '262'
+close-menu-item-slot: 31
+close-menu-item-name: '&cClose Menu'
+close-menu-item-lore:
+  - '&fClick to close'
+  - '&fthis menu.'
+
+#This is the paper from the anvil gui
+edit-paper-lore:
+  - '&8^^^^^^^^^^^^^'
+  - '&fEnter your new'
+  - '&ftitle that will'
+  - '&fbe used.'
+
+#Do not modify this
+version: 1.0
