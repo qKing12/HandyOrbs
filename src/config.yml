@@ -10,12 +10,9 @@ deactivate-radius: 25
 #hyper activity used, orb transformed to a server orb.
 use-logger: true
 
-#This setting enables a listener from 10 to 10 seconds
-#that will check if orbs are removed by other plugins
-#and respawns them, if you know you don't have any antilag
-#plugins that would remove named entities you can disable
-#this setting
-orb-removal-listener: true
+#If you set this to true, the orb will stop bobbing and
+#only rotate
+orb-rotate-only: false
 
 #Use crafting recipes for farming orbs to transfer from
 #a farming orb to another
@@ -273,4 +270,4 @@ teleport-own-orb-permission: 'handyorbs.teleport.own'
 teleport-other-orb-permission: 'handyorbs.teleport.other'
 
 #Please do not modify this:
-version: 1.0
+version: 1.2
