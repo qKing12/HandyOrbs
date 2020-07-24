@@ -1,0 +1,278 @@
+#Log player activity inside the console
+#Examples: orb placed, orb picked up, name edited, name reseted
+#hyper activity used, orb transformed to a server orb.
+use-logger: true
+
+#If you set this to true, the orb will stop bobbing and
+#only rotate
+orb-rotate-only: false
+
+#Use crafting recipes for farming orbs to transfer from
+#a farming orb to another
+use-crafting-recipes: true
+
+#Permission for the menu that is opened
+#by the command /handyorbs or /handyorbs <player>
+open-own-orbs-menu-permission: 'none'
+open-other-orbs-menu-permission: 'handyorbs.menu.open.other'
+
+#Permission for the menu that is opened
+#by the command /handyorbs get
+open-get-menu-permission: 'handyorbs.admin.orbs'
+
+#Permission for the command /handyorbs give <player> <orb>
+give-permission: 'handyorbs.give.orbs'
+
+#/handyorbs description:
+handyorbs-description: ' &7- &fOpen own orbs menu'
+#/handyorbs <player> description
+handyorbs-player-description: ' &7- &fOpen other''s orbs menu'
+#/handyorbs get description
+handyorbs-get-description: ' &7- &fGet orbs from admin menu'
+#/handyorbs give description
+handyorbs-give-description: ' &7- &fGive orbs to others'
+
+given-orb-message: '&aThe orb was given to %player%!'
+no-permission-message: '&cYou don''t have permission to use this.'
+can-not-find-player-message: '&cI can''t find that player...'
+player-has-no-orbs: '&cThat player doesn''t have any orbs.'
+
+#This is the name that orbs placed by a player
+#have when they are deployed
+#Use %owner% for player's username
+#Use %owner-display-name% for player's display name
+#Use %orb-name% for orb's name
+#ATTENTION! %owner% must be in there!!
+orb-with-owner-display-name: '&f%owner%''s %orb-name%'
+
+not-enough-space-to-place: '&cYou can only place an orb on top of a empty block.'
+
+#Orbs have a range of 3 blocks in which you can't place another orb
+other-orb-too-near: '&cYou can''t place your orb too close to another orb.'
+
+#The owner of the orb is the only one able to pick up the orb/enter the orb's menu
+#but if you have this permission you can bypass that
+bypass-claim-permission: 'handyorbs.bypass.owner'
+can-not-claim-message: '&cYou can''t interact with someone else''s orb!'
+
+#-----------------LIMIT ORBS HELP---------------------------
+#Limit the number of orbs a player can have
+#The maximum number is 7 of each orb
+#But you can limit them furthermore
+#Give the players permissions to limit their orbs
+#General permission: handyorbs.limit.type.number
+#where type is the category and number the orb limit
+#Examples:
+#handyorbs.limit.wheat.3 - a player can have a total of 3 wheat orbs
+#handyorbs.limit.carrots.3
+#handyorbs.limit.sugar-cane.3
+#handyorbs.imit.nether-wart.2
+#handyorbs.limit.fishing.3 - a player can have a total of 3 fishing orbs
+#handyorbs.limit.rainbow.2 - a player can have a total of 3 rainbow orbs
+orb-limit-reached-message: '&cYou reached your orb limit in this category. You can''t place any more orbs of this kind!'
+
+#If the player is an admin (they have the admin orb use permission)
+#when they reach the limit, the orb will still be placed
+#but it will belong to the server
+extra-admin-limit-reach-message: '&fSince you are an admin, your orb became a &cServer Orb&f!'
+
+permanent-orbs:
+  farmer:
+    #If set to true, orbs won't plant if there is not enough light
+    check-light-level: false
+    minimum-light-level: 9
+    permission: 'none'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 15
+    #Ability cooldown in seconds
+    ability-cooldown: 5
+    wheat:
+      skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGUzY2E1YjM5MGQxZTVmMjk3MjgzMjU3Y2U5MGFjNmY4NzgzZDc4NmVjYWVlMDk1YjQ5Y2M2Yjk0NGQ3MmQifX19'
+      orb-name: '&aFarmer Orb &7| &eWheat'
+      orb-lore:
+        - '&7Place down this orb'
+        - '&7and it will start to'
+        - '&7plant &awheat&7!'
+        - ''
+        - '&7Radius: 15'
+    carrots:
+      skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQzYTZiZDk4YWMxODMzYzY2NGM0OTA5ZmY4ZDJkYzYyY2U4ODdiZGNmM2NjNWIzODQ4NjUxYWU1YWY2YiJ9fX0'
+      orb-name: '&aFarmer Orb &7| &eCarrots'
+      orb-lore:
+        - '&7Place down this orb'
+        - '&7and it will start to'
+        - '&7plant &acarrots&7!'
+        - ''
+        - '&7Radius: 15'
+    potatoes:
+      skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjcyOWE4YTY1ZTM5NDIxZjNkMGFiY2I3ZDRhNzg1MjZlNzgyN2VkNzljNmE1N2U1M2Y3MThhYmMzNTM0MzYifX19'
+      orb-name: '&aFarmer Orb &7| &ePotatoes'
+      orb-lore:
+        - '&7Place down this orb'
+        - '&7and it will start to'
+        - '&7plant &apotatoes&7!'
+        - ''
+        - '&7Radius: 15'
+    beetroot:
+      skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzZlYTIyOGM0ZmQ5YWZlZDVhZGQ2ZDA1MjZkZTcxYjdhYzA1NTllYWJmYzJmNjBkZTZjNGFhNzMzZjUifX19'
+      orb-name: '&aFarmer Orb &7| &cBeetroot'
+      orb-lore:
+        - '&7Place down this orb'
+        - '&7and it will start to'
+        - '&7plant &cbeetroots&7!'
+        - ''
+        - '&7Radius: 15'
+  fishing:
+    permission: 'none'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 15
+    #How much is the fishing boosted? (1 - 100)
+    boost-percent: 50
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTY3OTliZmFhM2EyYzYzYWQ4NWRkMzc4ZTY2ZDU3ZDlhOTdhM2Y4NmQwZDlmNjgzYzQ5ODYzMmY0ZjVjIn19fQ'
+    orb-name: '&9Fishing Orb'
+    orb-lore:
+      - '&7Place down this orb'
+      - '&7and it will boost'
+      - '&7fishing speed by &a50%&7!'
+      - ''
+      - '&7Radius: 15'
+  nether-wart:
+    permission: 'none'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 15
+    #Ability cooldown in seconds
+    ability-cooldown: 5
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTExYTNjZWM3YWFmOTA0MjEyY2NmOTNiYjY3YTNjYWYzZDY0OTc4M2JhOTBiOGI2MGJiNjNjNzY4N2ViMzlmIn19fQ'
+    orb-name: '&cNether Wart Orb'
+    orb-lore:
+      - '&7Place down this orb'
+      - '&7and it will start to'
+      - '&7plant &cnether warts&7!'
+      - ''
+      - '&7Radius: 15'
+  sugar-cane:
+    permission: 'none'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 15
+    ability-cooldown: 5
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODYyNGJhY2I1ZjE5ODZlNjQ3N2FiY2U0YWU3ZGNhMTgyMGE1MjYwYjYyMzNiNTViYTFkOWJhOTM2Yzg0YiJ9fX0'
+    orb-name: '&eSugar Cane Orb'
+    orb-lore:
+      - '&7Place down this orb'
+      - '&7and it will start to'
+      - '&7plant &esugar cane&7!'
+      - ''
+      - '&7It only plants on sand'
+      - '&7near water!'
+      - ''
+      - '&7Radius: 15'
+  flower:
+    permission: 'vip'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 10
+    ability-cooldown: 4
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODliYzQ4MmFhZjU1MzZjN2VmZWE3ODUxZTM2Yzg1Y2YyY2VkYWU1NWFmY2YwZTA3NjFlZjI2MTk1NmRiYjAifX19'
+    orb-name: '&3Flower Orb'
+    orb-lore:
+      - '&7Place down this orb'
+      - '&7and it will start to'
+      - '&7plant &3flowers&7!'
+      - ''
+      - '&7It only plants on'
+      - '&7grass blocks!'
+      - ''
+      - '&7Radius: 10'
+  rainbow:
+    permission: 'vip'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 5
+    ability-cooldown: 4
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjdiNzQ3YjM3OGE0MWEwYTZlZGM4NmMwMDBmMDQwYzY5OTRhODMzMjUxMTk2YzlkNTJjMmEyMzBmOTUxNjBjYyJ9fX0'
+    orb-name: '&cR&4a&6i&en&9b&1o&3w &aO&2r&fb'
+    orb-lore:
+      - ''
+      - '&fPlace down this orb'
+      - '&fand it will start'
+      - '&fcreating &afireworks&f!'
+      - ''
+      - '&fRadius: 5'
+
+
+temporary-orbs:
+  radiant-orb:
+    permission: 'none'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 10
+    cooldown-in-seconds: 20
+    cooldown-message: '&fThis orb is regaining power. You can use it again in &c%cooldown% seconds'
+    already-placed-message: '&fYou already have a &aRadiant Power Orb &fplaced down!'
+    regen-percent-per-second: 5
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2FiNGM0ZDZlZTY5YmMyNGJiYTJiOGZhZjY3YjlmNzA0YTA2YjAxYWE5M2YzZWZhNmFlZjdhOTY5NmM0ZmVlZiJ9fX0'
+    orb-name: '&aRadiant Power Orb'
+    orb-subname: '&e%cooldown% seconds'
+    orb-lore:
+      - '&7Place down this orb'
+      - '&7and it will start to'
+      - '&7regen &c5%&7 of your'
+      - '&chealth &7per second'
+      - '&7for 30 seconds!'
+      - ''
+      - '&7Radius: 10'
+      - '&7Cooldown: 20s'
+  saving-grace-orb:
+    permission: 'none'
+    no-permission-message: '&cYou don''t have the permisson to use this orb!'
+    action-radius: 20
+    cooldown-in-seconds: 60
+    cooldown-message: '&fThis orb is regaining power. You can use it again in &c%cooldown% seconds'
+    already-placed-message: '&fYou already have a &6Saving Grace &fplaced down!'
+    saved-message: '&cYou died! &fbut you were saved by your &6Saving Grace&f which was destroyed in the process.'
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjdhZjgyNGE5NTRjNTUzMmRkMjA0Yjc0MDA5YzIwYjExMGU0MWRmZjM2OTA0ZmE0YThmNDhmNjY2MDdlMTczNyJ9fX0'
+    orb-name: '&6Saving Grace'
+    orb-subname: '&e%cooldown% seconds'
+    orb-lore:
+      - '&7While this orb is'
+      - '&7placed down it will'
+      - '&7save you from dying'
+      - '&7but will be destroyed'
+      - '&7in the process.'
+      - ''
+      - '&7If the orb doesn''t save'
+      - '&7you, after 30 seconds it'
+      - '&7will get back into'
+      - '&7your inventory.'
+      - ''
+      - '&7Radius: 20'
+      - '&7Cooldown: 60s'
+
+#Admin Orbs don't have an owner
+#They belong to the server
+#The name of the orb is the full title
+#that will be displayed
+admin-orbs-use-permission: 'handyorbs.admin.orbs'
+admin-orb-deny: '&fYou can''t interact with a &cServer Orb&f!'
+admin-orbs:
+  tree-spawner:
+    action-radius: 20
+    ability-cooldown: 20
+    skull-skin: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWFlODI2ZTdkYjg0NDdmYmQ2Mjk4OGZlZTBlODNiYmRkNjk0Mzc4YWVmMTJkMjU3MmU5NzVmMDU5YTU0OTkwIn19fQ'
+    orb-name: '&aTree Manager Orb'
+    orb-lore:
+      - '&fIf you place this orb down'
+      - '&fit will despawn all trees'
+      - '&fit finds in its radius'
+      - '&fand will spawn them'
+      - '&fone by one.'
+      - ''
+      - '&fIf you add new trees'
+      - '&fYou need to replace the orb.'
+      - ''
+      - '&cADMIN ORB'
+
+#Permission to teleport to your orbs
+teleport-own-orb-permission: 'handyorbs.teleport.own'
+#Permission to teleport to other player's orbs
+teleport-other-orb-permission: 'handyorbs.teleport.other'
+
+#Please do not modify this:
+version: 2.0
