@@ -1,8 +1,5 @@
 package me.qKing12.HandyOrbs.NBT;
 
-import me.qKing12.HandyOrbs.NBT.utils.MinecraftVersion;
-import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ReflectionMethod;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+
+import me.qKing12.HandyOrbs.NBT.utils.MinecraftVersion;
+import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ReflectionMethod;
 
 /**
  * Abstract List implementation for ListCompounds

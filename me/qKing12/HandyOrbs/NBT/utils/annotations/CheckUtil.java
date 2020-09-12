@@ -1,10 +1,9 @@
 package me.qKing12.HandyOrbs.NBT.utils.annotations;
 
-import me.qKing12.HandyOrbs.NBT.NbtApiException;
-import me.qKing12.HandyOrbs.NBT.utils.MinecraftVersion;
-
 import java.lang.reflect.Method;
 
+import me.qKing12.HandyOrbs.NBT.NbtApiException;
+import me.qKing12.HandyOrbs.NBT.utils.MinecraftVersion;
 
 public class CheckUtil {
 

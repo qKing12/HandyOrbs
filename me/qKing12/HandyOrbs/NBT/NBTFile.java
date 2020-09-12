@@ -1,11 +1,11 @@
 package me.qKing12.HandyOrbs.NBT;
 
-import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ObjectCreator;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ObjectCreator;
 
 /**
  * {@link NBTCompound} implementation backed by a {@link File}

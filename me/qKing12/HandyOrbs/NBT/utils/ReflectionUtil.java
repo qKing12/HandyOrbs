@@ -1,10 +1,10 @@
 package me.qKing12.HandyOrbs.NBT.utils;
 
-import me.qKing12.HandyOrbs.NBT.NbtApiException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
+import me.qKing12.HandyOrbs.NBT.NbtApiException;
 
 public final class ReflectionUtil {
 

@@ -1,5 +1,7 @@
 package me.qKing12.HandyOrbs;
 
+import me.qKing12.HandyOrbs.NBT.utils.MinecraftVersion;
+import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ClassWrapper;
 import me.qKing12.HandyOrbs.NMS.*;
 import me.qKing12.HandyOrbs.Orbs.Orb;
 import me.qKing12.HandyOrbs.Orbs.RadiantOrb;
@@ -52,11 +54,36 @@ public class Main extends JavaPlugin {
             nms=new NMS_v1_15_R1();
         else if(version.equals("v1_16_R1"))
             nms=new NMS_v1_16_R1();
+        else if(version.equals("v1_16_R2"))
+            nms=new NMS_v1_16_R2();
         return nms!=null;
     }
 
     public NMS getNms(){
         return nms;
+    }
+
+    private void loadingNBT() {
+        this.getLogger().info("Loading NBT API Util...");
+        MinecraftVersion.getVersion();
+        this.getLogger().info("Gson:");
+        MinecraftVersion.hasGsonSupport();
+        boolean classUnlinked = false;
+        ClassWrapper[] var2 = ClassWrapper.values();
+        int var3 = var2.length;
+
+        int var4;
+        for (var4 = 0; var4 < var3; ++var4) {
+            ClassWrapper c = var2[var4];
+            if (c.isEnabled() && c.getClazz() == null) {
+                if (!classUnlinked) {
+                    this.getLogger().info("Classes:");
+                }
+
+                this.getLogger().warning(c.name() + " did not find it's class!");
+                classUnlinked = true;
+            }
+        }
     }
 
     @Override
@@ -68,6 +95,7 @@ public class Main extends JavaPlugin {
             getLogger().info("If you use 1.13 update to 1.13.1-1.13.2");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+        loadingNBT();
 
         saveDefaultConfig();
 
@@ -130,9 +158,9 @@ public class Main extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        else{
+        else if(Bukkit.getServer().getOnlinePlayers().size()!=0){
             for(CopyOnWriteArrayList<Orb> orbs : ConfigLoad.orbsManager.values()) {
-                if(orbs.get(0).getLocation().getChunk().isLoaded()) {
+                if(ConfigLoad.isLoadedChunk(orbs.get(0).getLocation())) {
                     for (Orb orb : orbs) {
                         orb.checkFreeze();
                     }

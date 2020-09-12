@@ -1,10 +1,10 @@
 package me.qKing12.HandyOrbs.NBT;
 
+import java.io.InputStream;
+
 import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ClassWrapper;
 import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ObjectCreator;
 import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ReflectionMethod;
-
-import java.io.InputStream;
 
 /**
  * A Standalone {@link NBTCompound} implementation. All data is just kept inside

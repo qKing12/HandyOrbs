@@ -38,7 +38,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.farmingWheatOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -52,7 +52,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.farmingCarrotsOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -66,7 +66,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.farmingBeetrootOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -80,7 +80,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.farmingPotatoesOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -94,7 +94,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.fishingOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -108,7 +108,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.netherWartOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -122,7 +122,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.sugarCaneOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -136,7 +136,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.flowerOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();
@@ -150,7 +150,7 @@ public class PlayerData {
                     Iterator<Location> locs = PlayerData.rainbowOwnOrbs.get(owner).iterator();
                     while (locs.hasNext()) {
                         Location loc = locs.next();
-                        if (loc.getChunk().isLoaded()) {
+                        if (ConfigLoad.isLoadedChunk(loc)) {
                             ArmorStand crystal = ConfigLoad.getCrystal(loc);
                             if (crystal == null)
                                 locs.remove();

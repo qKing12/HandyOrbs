@@ -1,10 +1,10 @@
 package me.qKing12.HandyOrbs.NBT;
 
-import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ClassWrapper;
-import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ReflectionMethod;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ClassWrapper;
+import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ReflectionMethod;
 
 /**
  * Float implementation for NBTLists

@@ -21,6 +21,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -30,6 +31,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,7 +49,7 @@ public class ConfigLoad implements Listener {
     public void onChunkLoad(ChunkLoadEvent e) {
         if(Bukkit.getServer().getOnlinePlayers().size()==0)
             return;
-        String toCheck = e.getChunk().toString();
+        String toCheck = ConfigLoad.getChunkString(e.getChunk());
         if (orbsManager.containsKey(toCheck)) {
             Iterator<Orb> iterator = orbsManager.get(toCheck).iterator();
             while (iterator.hasNext()) {
@@ -58,26 +60,65 @@ public class ConfigLoad implements Listener {
         }
     }
 
+    public static boolean isLoadedChunk(Location loc){
+        int chunkX = loc.getBlockX() / 16;
+        int chunkZ = loc.getBlockZ() / 16;
+        return loc.getWorld().isChunkLoaded(chunkX, chunkZ);
+    }
+
+    public static String getChunkString(Location loc){
+        int chunkX = loc.getBlockX() / 16;
+        int chunkZ = loc.getBlockZ() / 16;
+        return loc.getWorld().getName()+"-Chunk="+chunkX+","+chunkZ;
+    }
+
+    public static String getChunkString(Chunk chunk){
+        return chunk.getWorld().getName()+"-Chunk="+chunk.getX()+","+chunk.getZ();
+    }
+
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
-        if(Bukkit.getServer().getOnlinePlayers().size()==1){
-            for(CopyOnWriteArrayList<Orb> orbs : ConfigLoad.orbsManager.values()) {
-                if(orbs.get(0).getLocation().getChunk().isLoaded()) {
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        if(Main.ungivenSavingGrace.contains(e.getPlayer().getName()) && e.getPlayer().getInventory().firstEmpty()!=-1) {
+            Main.ungivenSavingGrace.remove(e.getPlayer().getName());
+            Long cooldownEnd = ZonedDateTime.now().toInstant().toEpochMilli();
+            cooldownEnd+=plugin.getConfig().getInt("temporary-orbs.saving-grace-orb.cooldown-in-seconds")*1000;
+            SavingGrace.savingCooldown.put(e.getPlayer().getName(), cooldownEnd);
+            SavingGrace.placedDown.remove(e.getPlayer().getName());
+            e.getPlayer().getInventory().addItem(utils.makeUnique(savingGraceOrb.clone()));
+        }
+        if (Bukkit.getServer().getOnlinePlayers().size() == 1) {
+            for (CopyOnWriteArrayList<Orb> orbs : ConfigLoad.orbsManager.values()) {
+                if (isLoadedChunk(orbs.get(0).getLocation())) {
                     for (Orb orb : orbs) {
                         orb.checkFreeze();
                     }
+                }
+                else{
+                    Main.plugin.getLogger().info("[DEBUG] Checked chunk and was unloaded. "+orbs.get(0).getLocation().toString());
                 }
             }
         }
     }
 
     @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent e){
+        if(Bukkit.getServer().getOnlinePlayers().size()==1){
+            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
+                if(Bukkit.getServer().getOnlinePlayers().size()==0)
+                    Bukkit.getScheduler().cancelTasks(Main.plugin);
+            }, 23);
+            //Bukkit.getScheduler().cancelTasks(Main.plugin);
+        }
+    }
+
+    @EventHandler
     public void onChunkUnload(ChunkUnloadEvent e){
-            String toCheck = e.getChunk().toString();
+            String toCheck = ConfigLoad.getChunkString(e.getChunk());
             if(orbsManager.containsKey(toCheck)){
                 CopyOnWriteArrayList<Orb> tempOrbs = orbsManager.get(toCheck);
-                for(Orb orb : tempOrbs)
+                for(Orb orb : tempOrbs) {
                     orb.unload(true);
+                }
             }
     }
 
@@ -130,8 +171,8 @@ public class ConfigLoad implements Listener {
     public static int minimumLight;
 
     public static Orb getOrbByLocation(ArmorStand am){
-        if(orbsManager.containsKey(am.getLocation().getChunk().toString())){
-            for(Orb orb : orbsManager.get(am.getLocation().getChunk().toString()))
+        if(orbsManager.containsKey(ConfigLoad.getChunkString(am.getLocation()))){
+            for(Orb orb : orbsManager.get(ConfigLoad.getChunkString(am.getLocation())))
                 if(orb.compareArmorStand(am))
                     return orb;
         }
@@ -189,7 +230,7 @@ public class ConfigLoad implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e){
-        if(e.getSlot()<0 || e.getWhoClicked().getInventory().firstEmpty()==-1 || e.getInventory().getType().equals(InventoryType.ANVIL))
+        if(e.getSlot()<0 || e.getInventory().getType().equals(InventoryType.ANVIL))
             return;
         String title= e.getWhoClicked().getOpenInventory().getTitle();
         if(e.getInventory().equals(adminInventory)){
@@ -360,7 +401,7 @@ public class ConfigLoad implements Listener {
                         e.getPlayer().sendMessage(utils.chat(plugin.getConfig().getString("permanent-orbs."+new NBTItem(e.getItemInHand()).getString("HandyOrbsType")+".no-permission-message")));
                         return;
                     }
-                    for(Entity ent : e.getBlock().getWorld().getNearbyEntities(e.getBlock().getLocation(), 3, 5, 3)) {
+                    for(Entity ent : e.getBlock().getWorld().getNearbyEntities(e.getBlock().getLocation(), 3, 256, 3)) {
                         if (ent.getType().equals(EntityType.ARMOR_STAND)) {
                             ArmorStand tempAM = (ArmorStand) ent;
                             if (tempAM.isSmall() && !tempAM.isVisible()) {
@@ -441,7 +482,7 @@ public class ConfigLoad implements Listener {
     }
 
     public static ArmorStand getCrystal(Location loc){
-        for(Entity ent : loc.getWorld().getNearbyEntities(loc, 2, 5, 2)) {
+        for(Entity ent : loc.getWorld().getNearbyEntities(loc, 2, 256, 2)) {
             if (ent.getType().equals(EntityType.ARMOR_STAND)) {
                 ArmorStand am = (ArmorStand) ent;
                 if(am.isSmall() && !am.isVisible() && am.hasArms())
@@ -590,7 +631,7 @@ public class ConfigLoad implements Listener {
         }
         Orb newOrb = new Orb(placedLocation, type);
 
-        String toCheck = placedLocation.getChunk().toString();
+        String toCheck = ConfigLoad.getChunkString(placedLocation);
         if(!orbsManager.containsKey(toCheck)){
             CopyOnWriteArrayList<Orb> newOrbs = new CopyOnWriteArrayList<>();
             newOrbs.add(newOrb);

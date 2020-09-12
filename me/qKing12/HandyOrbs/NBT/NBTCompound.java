@@ -8,9 +8,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.bukkit.inventory.ItemStack;
+
 import me.qKing12.HandyOrbs.NBT.utils.MinecraftVersion;
 import me.qKing12.HandyOrbs.NBT.utils.nmsmappings.ReflectionMethod;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Base class representing NMS Compounds. For a standalone implementation check
@@ -680,8 +681,12 @@ public class NBTCompound {
 	public NBTType getType(String name) {
 		try {
 			readLock.lock();
-			if (MinecraftVersion.getVersion() == MinecraftVersion.MC1_7_R4)
-				return null;
+			if (MinecraftVersion.getVersion() == MinecraftVersion.MC1_7_R4) {
+				Object nbtbase = NBTReflectionUtil.getData(this, ReflectionMethod.COMPOUND_GET, name);
+				if(nbtbase == null)
+					return null;
+				return NBTType.valueOf((byte)ReflectionMethod.COMPOUND_OWN_TYPE.run(nbtbase));
+			}
 			Object o = NBTReflectionUtil.getData(this, ReflectionMethod.COMPOUND_GET_TYPE, name);
 			if (o == null)
 				return null;

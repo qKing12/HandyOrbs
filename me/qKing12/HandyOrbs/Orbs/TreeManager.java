@@ -47,7 +47,7 @@ public class TreeManager implements Listener {
                         e.getPlayer().sendMessage(utils.chat(Main.plugin.getConfig().getString("admin-orb-deny")));
                         return;
                     }
-                    for(Entity ent : e.getBlock().getWorld().getNearbyEntities(e.getBlock().getLocation(), 3, 3, 3)) {
+                    for(Entity ent : e.getBlock().getWorld().getNearbyEntities(e.getBlock().getLocation(), 3, 256, 3)) {
                         if (ent.getType().equals(EntityType.ARMOR_STAND)) {
                             ArmorStand tempAM = (ArmorStand) ent;
                             if (tempAM.isSmall() && !tempAM.isVisible()) {

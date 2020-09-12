@@ -14,9 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class Orb {
     private String type;
-    private Location loc;
-
-    private boolean goingDown;
+    private final Location loc;
 
     private ArmorStand armorStand;
 
@@ -35,17 +33,24 @@ public class Orb {
     }
 
     private void setupMovement(){
-        if(ConfigLoad.rotateOnly)
-            rotateOnly();
-        else {
-            if (this.goingDown)
-                goDown();
-            else
-                firstGoUp();
+        if(!ConfigLoad.isLoadedChunk(this.loc)){
+            Main.plugin.getLogger().info("[DEBUG] An unloaded orb tried to register movement. "+this.loc.toString());
+            return;
         }
+        //Bukkit.getScheduler().runTask(Main.plugin, () -> {
+            if(ConfigLoad.rotateOnly)
+                rotateOnly();
+            else {
+                move();
+            }
+        //});
     }
 
     private void setupActivity(){
+        if(!ConfigLoad.isLoadedChunk(this.loc)){
+            Main.plugin.getLogger().info("[DEBUG] An unloaded orb tried to register activity. "+this.loc.toString());
+            return;
+        }
         Bukkit.getScheduler().runTask(Main.plugin, () -> {
             if(type!=null) {
                 switch (type) {
@@ -93,7 +98,7 @@ public class Orb {
             if (am == null) {
                 Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
                     ArmorStand am2=ConfigLoad.getCrystal(this.loc);
-                    if(am2!=null && this.loc.getChunk().isLoaded()) {
+                    if(am2!=null && ConfigLoad.isLoadedChunk(loc)) {
                         this.armorStand = am2;
                         if (this.type == null) {
                             this.type = new NBTItem(am2.getHelmet()).getString("HandyOrbsType");
@@ -108,7 +113,12 @@ public class Orb {
             else {
                 this.armorStand = am;
                 if (this.type == null) {
-                    this.type = new NBTItem(am.getHelmet()).getString("HandyOrbsType");
+                    try {
+                        this.type = new NBTItem(am.getHelmet()).getString("HandyOrbsType");
+                    }catch(Exception x){
+                        Main.plugin.getLogger().info("[DEBUG] Orb failed to load at location "+this.loc.toString());
+                        return;
+                    }
                 }
                 Bukkit.getScheduler().runTaskLaterAsynchronously(Main.plugin, () -> {
                     setupActivity();
@@ -132,18 +142,27 @@ public class Orb {
             if (am != null) {
                 this.armorStand = am;
                 if (this.type == null) {
-                    this.type = new NBTItem(am.getHelmet()).getString("HandyOrbsType");
+                    try {
+                        this.type = new NBTItem(am.getHelmet()).getString("HandyOrbsType");
+                    }catch(Exception x){
+                        Main.plugin.getLogger().info("[DEBUG] Orb failed to load at location "+this.loc.toString());
+                        return;
+                    }
                 }
+            }
+            else{
+                Main.plugin.getLogger().warning("An orb can't find it's armorstand so it won't load.");
+                Main.plugin.getLogger().warning(this.loc.toString());
+                return;
             }
         }
         new BukkitRunnable(){
             @Override
             public void run(){
-                if(activity==null || !Bukkit.getScheduler().isCurrentlyRunning(activity.getTaskId()))
+                //if(activity==null || !Bukkit.getScheduler().isCurrentlyRunning(activity.getTaskId()))
                     setupActivity();
-                if(movement==null || !Bukkit.getScheduler().isCurrentlyRunning(movement.getTaskId())){
+                //if(movement==null || !Bukkit.getScheduler().isCurrentlyRunning(movement.getTaskId()))
                     setupMovement();
-                }
             }
         }.runTaskLaterAsynchronously(Main.plugin, 10);
     }
@@ -158,8 +177,7 @@ public class Orb {
             movement.cancel();
         }
         if(!chunkUnloaded) {
-            Main.plugin.getLogger().info("[DEBUG] An orb has been forcefully unloaded from memory.");
-            String toRemove = this.loc.getChunk().toString();
+            String toRemove = ConfigLoad.getChunkString(loc);
             ConfigLoad.orbsManager.get(toRemove).remove(this);
             if (ConfigLoad.orbsManager.get(toRemove).isEmpty())
                 ConfigLoad.orbsManager.remove(toRemove);
@@ -192,47 +210,25 @@ public class Orb {
             p.sendMessage("Orb has activity");
     }
 
-    private void firstGoUp() {
-        this.goingDown = false;
-        Location loc = armorStand.getLocation();
-        double height = this.loc.getBlockY() + 0.95;
-        if (movement != null)
+    private void move() {
+        Location location = armorStand.getLocation();
+        if (movement != null) {
             movement.cancel();
+        }
+
+        if(armorStand.isDead()) {
+            movement=null;
+            return;
+        }
+
         movement = new BukkitRunnable() {
+            private final int minimumHeight=loc.getBlockY();
+            private final int maximumHeight=minimumHeight+1;
+            private boolean goingUp=false;
+
             @Override
             public void run() {
                 if (armorStand.isDead() || armorStand.getHelmet().getType().equals(Material.AIR)) {
-                    if (activity != null) {
-                        activity.cancel();
-                        activity = null;
-                    }
-                    movement.cancel();
-                    return;
-                }
-                if (armorStand.getLocation().getY() >= height) {
-                    cancel();
-                    goDown();
-                    return;
-                }
-                loc.setYaw(loc.getYaw() + (float) 7);
-                Bukkit.getScheduler().runTask(Main.plugin, () -> armorStand.teleport(loc.add(0, 0.07, 0)));
-                Main.plugin.getNms().sendParticle("FIREWORKS_SPARK", true, (float) loc.getX(), (float) loc.getY() + (float) 1.3, (float) loc.getZ(), (float) 0.5, 0, (float) 0.5, 0, 1, loc);
-
-            }
-        }.runTaskTimerAsynchronously(Main.plugin, 1, 1);
-    }
-
-    private void goUp() {
-        this.goingDown = false;
-        Location loc = armorStand.getLocation();
-        double height = this.loc.getBlockY() + 0.95;
-        if (movement != null)
-            movement.cancel();
-        movement = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (armorStand.isDead() || armorStand.getHelmet().getType().equals(Material.AIR)) {
-                    Location loc = armorStand.getLocation().getBlock().getLocation();
                     if(armorStand.hasBasePlate()){
                         if(activity!=null) {
                             activity.cancel();
@@ -255,68 +251,29 @@ public class Orb {
                             am.setArms(true);
                             am.setGravity(false);
                             am.setBasePlate(false);
-                            armorStand = am;
                         }
                         armorStand=am;
                     });
                 }
-                if (armorStand.getLocation().getY() >= height) {
-                    cancel();
-                    goDown();
-                    return;
-                }
-                loc.setYaw(loc.getYaw() + (float) 7);
-                Bukkit.getScheduler().runTask(Main.plugin, () -> armorStand.teleport(loc.add(0, 0.07, 0)));
-                Main.plugin.getNms().sendParticle("FIREWORKS_SPARK", true, (float) loc.getX(), (float) loc.getY() + (float) 1.3, (float) loc.getZ(), (float) 0.5, 0, (float) 0.5, 0, 1, loc);
-
-            }
-        }.runTaskTimerAsynchronously(Main.plugin, 1, 1);
-    }
-
-    private void goDown() {
-        this.goingDown = true;
-        Location loc = armorStand.getLocation();
-        double height = this.loc.getBlockY() + 0.02;
-        if (movement != null)
-            movement.cancel();
-        movement = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (armorStand.isDead()) {
-                    if(armorStand.hasBasePlate()){
-                        if(activity!=null) {
-                            activity.cancel();
-                            activity=null;
-                        }
-                        movement.cancel();
-                        return;
+                if(goingUp) {
+                    if (armorStand.getLocation().getY() >= maximumHeight) {
+                        goingUp=false;
                     }
-                    Location loc = armorStand.getLocation().getBlock().getLocation();
-                    Bukkit.getScheduler().runTask(Main.plugin, () -> {
-                        ArmorStand am = ConfigLoad.getCrystal(loc);
-                        if(am==null) {
-                            am = (ArmorStand) loc.getWorld().spawnEntity(armorStand.getLocation(), EntityType.ARMOR_STAND);
-                            am.setHelmet(armorStand.getHelmet());
-                            am.setCustomName(armorStand.getCustomName());
-                            am.setCustomNameVisible(armorStand.isCustomNameVisible());
-                            am.setVisible(false);
-                            am.setSmall(true);
-                            am.setRemoveWhenFarAway(false);
-                            am.setArms(true);
-                            am.setGravity(false);
-                            am.setBasePlate(false);
-                            armorStand = am;
-                        }
-                        armorStand=am;
-                    });
+                    else {
+                        location.setYaw(location.getYaw() + (float) 7);
+                        Bukkit.getScheduler().runTask(Main.plugin, () -> armorStand.teleport(location.add(0, 0.07, 0)));
+                        Main.plugin.getNms().sendParticle("FIREWORKS_SPARK", true, (float) loc.getX(), (float) loc.getY() + (float) 1.3, (float) loc.getZ(), (float) 0.5, 0, (float) 0.5, 0, 1, location);
+                    }
                 }
-                if (armorStand.getLocation().getY() <= height) {
-                    cancel();
-                    goUp();
-                    return;
+                else{
+                    if (armorStand.getLocation().getY() <= minimumHeight) {
+                        goingUp=true;
+                    }
+                    else {
+                        location.setYaw(location.getYaw() + (float) 7);
+                        Bukkit.getScheduler().runTask(Main.plugin, () -> armorStand.teleport(location.add(0, -0.07, 0)));
+                    }
                 }
-                loc.setYaw(loc.getYaw() + (float) 7);
-                Bukkit.getScheduler().runTask(Main.plugin, () -> armorStand.teleport(loc.add(0, -0.07, 0)));
             }
         }.runTaskTimerAsynchronously(Main.plugin, 1, 1);
     }
@@ -324,6 +281,9 @@ public class Orb {
     private void rotateOnly() {
         if (movement != null)
             movement.cancel();
+        if(armorStand.isDead())
+            return;
+
         movement = new BukkitRunnable() {
             @Override
             public void run() {

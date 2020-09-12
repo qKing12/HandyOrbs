@@ -15,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -85,7 +84,7 @@ public class SavingGrace implements Listener {
                         } else
                             savingCooldown.remove(e.getPlayer().getName());
                     }
-                    for(Entity ent : e.getBlock().getWorld().getNearbyEntities(e.getBlock().getLocation(), 3, 3, 3)) {
+                    for(Entity ent : e.getBlock().getWorld().getNearbyEntities(e.getBlock().getLocation(), 3, 256, 3)) {
                         if (ent.getType().equals(EntityType.ARMOR_STAND)) {
                             ArmorStand tempAM = (ArmorStand) ent;
                             if (tempAM.isSmall() && !tempAM.isVisible()) {
@@ -140,7 +139,7 @@ public class SavingGrace implements Listener {
         if(ConfigLoad.rotateOnly)
             rotateOnly(armorStand, armorStand2, loc);
         else
-            goUp(armorStand, armorStand2, loc);
+            move(armorStand, armorStand2, loc);
 
         if(useLogger) {
             NBTItem finalCrystal = new NBTItem(skull);
@@ -191,36 +190,12 @@ public class SavingGrace implements Listener {
         }.runTaskTimer(plugin, 1, 1);
     }
 
-    private static void goUp(ArmorStand armorStand, ArmorStand armorStand2, Location loc){
-        double height=loc.getY()+1;
+    private static void move(ArmorStand armorStand, ArmorStand armorStand2, Location loc){
         new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (armorStand.isDead()) {
-                    armorStand.remove();
-                    armorStand2.remove();
-                    savingArmorStands.remove(armorStand);
-                    savingArmorStands.remove(armorStand2);
-                    cancel();
-                    return;
-                }
-                if(armorStand.getLocation().getY()>height){
-                    cancel();
-                    goDown(armorStand, armorStand2, loc);
-                    return;
-                }
-                loc.setYaw(loc.getYaw()+(float)7);
-                armorStand.teleport(loc.add(0, 0.07, 0));
-                armorStand2.teleport(loc.clone().add(0, 0.22, 0));
-                plugin.getNms().sendParticle("FLAME", true, (float)loc.getX(), (float)loc.getY()+(float)1.3, (float)loc.getZ(), (float)0.3, 0, (float)0.3, 0, 1, loc);
-            }
-        }.runTaskTimer(plugin, 1, 1);
-    }
+            private final int minimumHeight=loc.getBlockY();
+            private final int maximumHeight=minimumHeight+1;
+            private boolean goingUp=true;
 
-    //2
-    private static void goDown(ArmorStand armorStand, ArmorStand armorStand2, Location loc){
-        double height=loc.getY()-1;
-        new BukkitRunnable() {
             @Override
             public void run() {
                 if (armorStand.isDead()) {
@@ -231,14 +206,27 @@ public class SavingGrace implements Listener {
                     cancel();
                     return;
                 }
-                if(armorStand.getLocation().getY()<height){
-                    cancel();
-                    goUp(armorStand, armorStand2, loc);
-                    return;
+                if(goingUp) {
+                    if (armorStand.getLocation().getY() > maximumHeight) {
+                        goingUp=false;
+                    }
+                    else {
+                        loc.setYaw(loc.getYaw() + (float) 7);
+                        armorStand.teleport(loc.add(0, 0.07, 0));
+                        armorStand2.teleport(loc.clone().add(0, 0.22, 0));
+                        plugin.getNms().sendParticle("FLAME", true, (float) loc.getX(), (float) loc.getY() + (float) 1.3, (float) loc.getZ(), (float) 0.3, 0, (float) 0.3, 0, 1, loc);
+                    }
                 }
-                loc.setYaw(loc.getYaw()+(float)7);
-                armorStand.teleport(loc.add(0, -0.07, 0));
-                armorStand2.teleport(loc.clone().add(0, 0.22, 0));
+                else{
+                    if(armorStand.getLocation().getY()<minimumHeight){
+                        goingUp=true;
+                    }
+                    else {
+                        loc.setYaw(loc.getYaw() + (float) 7);
+                        armorStand.teleport(loc.add(0, -0.07, 0));
+                        armorStand2.teleport(loc.clone().add(0, 0.22, 0));
+                    }
+                }
             }
         }.runTaskTimer(plugin, 1, 1);
     }

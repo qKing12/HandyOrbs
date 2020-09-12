@@ -1,23 +1,23 @@
 package me.qKing12.HandyOrbs.NMS;
 
-import net.minecraft.server.v1_16_R1.EntityFishingHook;
-import net.minecraft.server.v1_16_R1.PacketPlayOutWorldParticles;
-import net.minecraft.server.v1_16_R1.ParticleType;
-import net.minecraft.server.v1_16_R1.Particles;
+import net.minecraft.server.v1_16_R2.EntityFishingHook;
+import net.minecraft.server.v1_16_R2.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_16_R2.ParticleType;
+import net.minecraft.server.v1_16_R2.Particles;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Bisected;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-public class NMS_v1_16_R1 implements NMS {
+public class NMS_v1_16_R2 implements NMS{
     Field fishCatchTime=null;
 
     Material grass=Material.GRASS_BLOCK;
@@ -117,11 +117,11 @@ public class NMS_v1_16_R1 implements NMS {
 
     @Override
     public void setBiteTime(FishHook hook, int time){
-        net.minecraft.server.v1_16_R1.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
+        net.minecraft.server.v1_16_R2.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
 
         if(fishCatchTime==null) {
             try {
-                fishCatchTime = net.minecraft.server.v1_16_R1.EntityFishingHook.class.getDeclaredField("ao");
+                fishCatchTime = net.minecraft.server.v1_16_R2.EntityFishingHook.class.getDeclaredField("ah");
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (SecurityException e) {

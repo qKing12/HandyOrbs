@@ -45,7 +45,7 @@ public class Commands implements CommandExecutor, Listener {
             }
             else if(args[0].equalsIgnoreCase("debug") && p.hasPermission("handyorbs.admin")){
                 ArrayList<ArmorStand> armorStands = new ArrayList<>();
-                for(Entity ent : p.getLocation().getWorld().getNearbyEntities(p.getLocation(), 2, 2, 2)) {
+                for(Entity ent : p.getLocation().getWorld().getNearbyEntities(p.getLocation(), 2, 256, 2)) {
                     if (ent.getType().equals(EntityType.ARMOR_STAND)) {
                         ArmorStand am = (ArmorStand) ent;
                         if(am.isSmall() && !am.isVisible() && am.hasArms())
@@ -68,22 +68,24 @@ public class Commands implements CommandExecutor, Listener {
                 }
             }
             else if(args[0].equalsIgnoreCase("debugChunk") && p.hasPermission("handyorbs.admin")){
-                if(ConfigLoad.orbsManager.containsKey(p.getLocation().getChunk().toString())){
+                if(ConfigLoad.orbsManager.containsKey(ConfigLoad.getChunkString(p.getLocation()))){
                     p.sendMessage("Chunk is in memory");
-                    for(Orb orb : ConfigLoad.orbsManager.get(p.getLocation().getChunk().toString())){
+                    for(Orb orb : ConfigLoad.orbsManager.get(ConfigLoad.getChunkString(p.getLocation()))){
                         p.sendMessage(orb.getLocation().toString());
                     }
                 }
                 else{
                     p.sendMessage("Chunk is not in memory");
-                    for(String chunk : ConfigLoad.orbsManager.keySet())
-                        p.sendMessage(chunk);
                 }
             }
+            else if(args[0].equalsIgnoreCase("debugChunkList") && p.hasPermission("handyorbs.admin")){
+                for(String chunk : ConfigLoad.orbsManager.keySet())
+                    p.sendMessage(chunk);
+            }
             else if(args[0].equalsIgnoreCase("cleanUpChunk") && p.hasPermission("handyorbs.admin")){
-                if(ConfigLoad.orbsManager.containsKey(p.getLocation().getChunk().toString())){
+                if(ConfigLoad.orbsManager.containsKey(ConfigLoad.getChunkString(p.getLocation()))){
                     p.sendMessage(utils.chat("&aChunk clean up attempted."));
-                    for(Orb orb : ConfigLoad.orbsManager.get(p.getLocation().getChunk().toString())){
+                    for(Orb orb : ConfigLoad.orbsManager.get(ConfigLoad.getChunkString(p.getLocation()))){
                         ArmorStand am = orb.getArmorStand();
                         if(am==null || am.isDead())
                             orb.unload(false);
