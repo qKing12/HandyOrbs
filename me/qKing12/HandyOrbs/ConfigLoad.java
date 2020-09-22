@@ -93,9 +93,6 @@ public class ConfigLoad implements Listener {
                         orb.checkFreeze();
                     }
                 }
-                else{
-                    Main.plugin.getLogger().info("[DEBUG] Checked chunk and was unloaded. "+orbs.get(0).getLocation().toString());
-                }
             }
         }
     }
@@ -389,6 +386,10 @@ public class ConfigLoad implements Listener {
     public void onCrystalPlace(BlockPlaceEvent e){
         if(e.isCancelled())
             return;
+        else if(!Bukkit.getVersion().contains("1.8") && e.getHand().equals(EquipmentSlot.OFF_HAND)){
+            e.setCancelled(true);
+            return;
+        }
         if(e.getItemInHand().getType().equals(ConfigLoad.skullItem.getType()) && e.getItemInHand().hasItemMeta()) {
             if (utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.farmingPotatoesOrb) || utils.itemsAreEqual(ConfigLoad.farmingWheatOrb, e.getItemInHand()) || utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.farmingCarrotsOrb) || utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.fishingOrb) || utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.netherWartOrb) || utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.sugarCaneOrb) || utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.rainbowOrb) || utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.flowerOrb) || (farmingBeetrootOrb!=null && utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.farmingBeetrootOrb))) {
                 e.setCancelled(true);

@@ -12,6 +12,10 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -86,6 +90,18 @@ public class Main extends JavaPlugin {
         }
     }
 
+    public class firstJoinInitialize implements Listener {
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event){
+            try {
+                Database.loadFromFile(plugin);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            HandlerList.unregisterAll(this);
+        }
+    }
+
     @Override
     public void onEnable(){
         this.plugin=this;
@@ -152,11 +168,7 @@ public class Main extends JavaPlugin {
         orbManageCfg=YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "orb_list_menus.yml"));
         new ConfigLoad(this);
         if(!ConfigLoad.isReloading) {
-            try {
-                Database.loadFromFile(this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Bukkit.getPluginManager().registerEvents(new firstJoinInitialize(), this);
         }
         else if(Bukkit.getServer().getOnlinePlayers().size()!=0){
             for(CopyOnWriteArrayList<Orb> orbs : ConfigLoad.orbsManager.values()) {

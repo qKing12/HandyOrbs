@@ -34,7 +34,7 @@ public class Orb {
 
     private void setupMovement(){
         if(!ConfigLoad.isLoadedChunk(this.loc)){
-            Main.plugin.getLogger().info("[DEBUG] An unloaded orb tried to register movement. "+this.loc.toString());
+            //Main.plugin.getLogger().info("[DEBUG] An unloaded orb tried to register movement. "+this.loc.toString());
             return;
         }
         //Bukkit.getScheduler().runTask(Main.plugin, () -> {
@@ -48,7 +48,7 @@ public class Orb {
 
     private void setupActivity(){
         if(!ConfigLoad.isLoadedChunk(this.loc)){
-            Main.plugin.getLogger().info("[DEBUG] An unloaded orb tried to register activity. "+this.loc.toString());
+            //Main.plugin.getLogger().info("[DEBUG] An unloaded orb tried to register activity. "+this.loc.toString());
             return;
         }
         Bukkit.getScheduler().runTask(Main.plugin, () -> {

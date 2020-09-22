@@ -207,7 +207,7 @@ public class Database {
             for(Location loc : locsToAdd) {
                 Orb newOrb = new Orb(loc, null);
                 //Main.plugin.getLogger().warning("[DEBUG] Trying to load orb " + loc.toString());
-
+                
                 String toCheck = ConfigLoad.getChunkString(loc);
 
                 if (!ConfigLoad.orbsManager.containsKey(toCheck)) {

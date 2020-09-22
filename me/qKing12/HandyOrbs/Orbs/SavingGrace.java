@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -58,6 +59,10 @@ public class SavingGrace implements Listener {
 
     @EventHandler
     public void onCrystalPlace(BlockPlaceEvent e){
+        if(!Bukkit.getVersion().contains("1.8") && e.getHand().equals(EquipmentSlot.OFF_HAND)) {
+            e.setCancelled(true);
+            return;
+        }
         if(e.getItemInHand().hasItemMeta()) {
             if (utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.savingGraceOrb)) {
                 e.setCancelled(true);
