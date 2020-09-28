@@ -59,13 +59,12 @@ public class SavingGrace implements Listener {
 
     @EventHandler
     public void onCrystalPlace(BlockPlaceEvent e){
-        if(!Bukkit.getVersion().contains("1.8") && e.getHand().equals(EquipmentSlot.OFF_HAND)) {
-            e.setCancelled(true);
-            return;
-        }
         if(e.getItemInHand().hasItemMeta()) {
             if (utils.itemsAreEqual(e.getItemInHand(), ConfigLoad.savingGraceOrb)) {
-                e.setCancelled(true);
+                if(!Bukkit.getVersion().contains("1.8") && e.getHand().equals(EquipmentSlot.OFF_HAND)) {
+                    e.setCancelled(true);
+                    return;
+                }
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     if(!e.getBlock().getType().equals(Material.AIR)){
                         e.getPlayer().sendMessage(utils.chat(plugin.getConfig().getString("not-enough-space-to-place")));
